@@ -21,16 +21,16 @@ public class WebhookController {
 
     @PostMapping("/text")
     public void handleTextWebhook(@RequestBody TextWebhookBody webhookBody) {
-    	String employeeId = webhookBody.getEmployeeId();
-        String respuesta = webhookBody.getText();
+    	String employeeId = webhookBody.getData().getEmployeeId();
+        String respuesta = webhookBody.getData().getText();
         
         conversacionService.processTextResponse(employeeId, respuesta);
     }
 
     @PostMapping("/button")
     public void handleButtonSelectedWebhook(@RequestBody ButtonSelectedWebhookBody webhookBody) {
-    	String employeeId = webhookBody.getEmployeeId();
-        String respuesta = webhookBody.getValue();
+    	String employeeId = webhookBody.getData().getEmployeeId();
+        String respuesta = webhookBody.getData().getValue();
         
         conversacionService.processButtonResponse(employeeId, respuesta);
     }

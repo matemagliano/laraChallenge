@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,6 @@ import com.laraChallenge.model.PreguntaTextoLibre;
 import com.laraChallenge.model.Respuesta;
 import com.laraChallenge.repository.ConversacionRepository;
 
-import reactor.core.publisher.Mono;
-
 @Service
 public class ConversacionService {
     private final SlackService slackService;
@@ -35,6 +34,7 @@ public class ConversacionService {
 
     public Conversacion createConversacion(Employee employee, List<Pregunta> preguntas) {
     	Conversacion conversacion = new Conversacion(employee, preguntas);
+    	conversacionRepository.save(conversacion);
         enviarSiguientePreguntaOFinalizar(conversacion);
         return conversacion;
     }
@@ -73,7 +73,7 @@ public class ConversacionService {
         }
     }
 
-    private Mono<Void> enviarPregunta(Conversacion conversacion) {
+    private void enviarPregunta(Conversacion conversacion) {
     	Pregunta pregunta = conversacion.obtenerPreguntaActual();
         if (pregunta instanceof PreguntaTextoLibre) {
             AskTextResponseMessage message = new AskTextResponseMessage();
@@ -81,30 +81,32 @@ public class ConversacionService {
             message.setBody(pregunta.getTexto());
             message.setWebhookUrl(URL_WEBHOOK_TEXT);
             message.setAskText(true);
-            return slackService.sendAskTextResponseMessage(message);
+            slackService.sendAskTextResponseMessage(message).subscribe();
+            //return Mono.empty();
         } else if (pregunta instanceof PreguntaMultipleChoice) {
             ButtonsMessage message = new ButtonsMessage();
             message.setEmployeeId(conversacion.getEmployee().getId());
             message.setBody(pregunta.getTexto());
             message.setWebhookUrl(URL_WEBHOOK_BUTTON);
-            message.setButtons(((PreguntaMultipleChoice) pregunta).getOpciones().stream()
-                .map(option -> {
-                    Button button = new Button();
-                    button.setLabel(option);
-                    button.setValue(option);
-                    return button;
-                }).collect(Collectors.toList()));
-            return slackService.sendButtonsMessage(message);
+            List<String> opciones =((PreguntaMultipleChoice) pregunta).getOpciones();
+            message.setButtons(IntStream.range(0, opciones.size())
+                    .mapToObj(i -> {
+                        Button button = new Button();
+                        button.setLabel(opciones.get(i));
+                        button.setValue(String.valueOf(i + 1)); // Set the value as a number
+                        return button;
+                    }).collect(Collectors.toList()));
+            slackService.sendButtonsMessage(message).subscribe();
         }
-        return Mono.empty();
+        //return Mono.empty();
     }
 
-    private Mono<Void> enviarMensajeFinal(Conversacion conversation) {
+    private void enviarMensajeFinal(Conversacion conversation) {
         SimpleTextMessage message = new SimpleTextMessage();
         message.setEmployeeId(conversation.getEmployee().getId());
         message.setBody("Gracias por contestar todas las preguntas. ¡Hablamos pronto!");
         message.setWebhookUrl("http://localhost:8080/api/webhook");
-        return slackService.sendSimpleTextMessage(message);
+        slackService.sendSimpleTextMessage(message).subscribe();
     }
 
 }

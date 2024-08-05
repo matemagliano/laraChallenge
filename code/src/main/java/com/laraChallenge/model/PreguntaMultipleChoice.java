@@ -15,7 +15,7 @@ public class PreguntaMultipleChoice extends Pregunta {
 	public void preguntar() {
     	System.out.println(super.getTexto());
         for (int i = 0; i < opciones.size(); i++) {
-            System.out.println((i + 1) + ". " + opciones.get(i));
+            System.out.println(opciones.get(i));
         }
 	}
     
