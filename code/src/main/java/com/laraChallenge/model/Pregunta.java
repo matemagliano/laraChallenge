@@ -1,14 +1,12 @@
 package com.laraChallenge.model;
 
-import java.util.UUID;
-
 public abstract class Pregunta {
 	private String id;
     private String texto;
     private String tipo;
     
-    public Pregunta(String texto) {
-    	this.id = UUID.randomUUID().toString();
+    public Pregunta(String id, String texto) {
+    	this.id = id;
         this.texto = texto;
     }
     

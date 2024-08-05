@@ -1,5 +1,6 @@
 package com.laraChallenge.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,22 +20,41 @@ import com.laraChallenge.model.PreguntaMultipleChoice;
 import com.laraChallenge.model.PreguntaTextoLibre;
 import com.laraChallenge.model.Respuesta;
 import com.laraChallenge.repository.ConversacionRepository;
+import com.laraChallenge.repository.PreguntasRepository;
 
 @Service
 public class ConversacionService {
     private final SlackService slackService;
     private final ConversacionRepository conversacionRepository;
+    private final PreguntasRepository preguntasRepository;
     private final String URL_WEBHOOK_TEXT = "http://localhost:8081/api/webhook/text";
     private final String URL_WEBHOOK_BUTTON = "http://localhost:8081/api/webhook/button";
+    private final String URL_WEBHOOK = "http://localhost:8081/api/webhook";
 
-    public ConversacionService(SlackService slackService, ConversacionRepository conversacionRepository) {
+    public ConversacionService(SlackService slackService, ConversacionRepository conversacionRepository, PreguntasRepository preguntasRepository) {
         this.slackService = slackService;
         this.conversacionRepository = conversacionRepository;
+        this.preguntasRepository = preguntasRepository;
     }
 
     public Conversacion createConversacion(Employee employee, List<Pregunta> preguntas) {
     	Conversacion conversacion = new Conversacion(employee, preguntas);
     	conversacionRepository.save(conversacion);
+        enviarSiguientePreguntaOFinalizar(conversacion);
+        return conversacion;
+    }
+    
+    public Conversacion createConversacion(String employeeId, List<String> preguntaIds) {
+    	Employee employee = new Employee(employeeId, "Mateo Magliano");
+    	List<Pregunta> preguntas = new ArrayList<>();
+        for (String preguntaId : preguntaIds) {
+            Optional<Pregunta> pregunta = preguntasRepository.findById(preguntaId);
+            if (pregunta.isPresent()) {
+                preguntas.add(pregunta.get());
+            }
+        }
+        Conversacion conversacion = new Conversacion(employee, preguntas);
+        conversacionRepository.save(conversacion);
         enviarSiguientePreguntaOFinalizar(conversacion);
         return conversacion;
     }
@@ -93,19 +113,18 @@ public class ConversacionService {
                     .mapToObj(i -> {
                         Button button = new Button();
                         button.setLabel(opciones.get(i));
-                        button.setValue(String.valueOf(i + 1)); // Set the value as a number
+                        button.setValue(String.valueOf(i + 1));
                         return button;
                     }).collect(Collectors.toList()));
             slackService.sendButtonsMessage(message).subscribe();
         }
-        //return Mono.empty();
     }
 
     private void enviarMensajeFinal(Conversacion conversation) {
         SimpleTextMessage message = new SimpleTextMessage();
         message.setEmployeeId(conversation.getEmployee().getId());
         message.setBody("Gracias por contestar todas las preguntas. ¡Hablamos pronto!");
-        message.setWebhookUrl("http://localhost:8080/api/webhook");
+        message.setWebhookUrl("URL_WEBHOOK");
         slackService.sendSimpleTextMessage(message).subscribe();
     }
 

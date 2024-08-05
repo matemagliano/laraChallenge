@@ -1,17 +1,6 @@
 package com.laraChallenge;
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.laraChallenge.model.Conversacion;
-import com.laraChallenge.model.Employee;
-import com.laraChallenge.model.Pregunta;
-import com.laraChallenge.model.PreguntaMultipleChoice;
-import com.laraChallenge.model.PreguntaTextoLibre;
-import com.laraChallenge.service.ConversacionService;
 
 @SpringBootApplication
 public class MyApplication {
@@ -19,28 +8,28 @@ public class MyApplication {
 	public static void main(String[] args) {
         SpringApplication.run(MyApplication.class, args);
     }
-    
+	
+	
 	/*
-	 * @Bean public CommandLineRunner testRunner(SlackService slackService) { return
-	 * args -> { AskTextResponseMessage message = new AskTextResponseMessage();
-	 * message.setEmployeeId("1"); message.setBody("Test body");
-	 * message.setAskText(true);
-	 * message.setWebhookUrl("http://localhost:8081/api/webhook/text");
+	 * @Bean public CommandLineRunner testRunner(ConversacionService
+	 * conversacionService, PreguntasRepository preguntasRepository) { return args
+	 * -> { List<Pregunta> listPreguntas = new ArrayList<>();
+	 * listPreguntas.add(preguntasRepository.findById("1").get());
+	 * listPreguntas.add(preguntasRepository.findById("2").get());
+	 * listPreguntas.add(preguntasRepository.findById("3").get());
+	 * listPreguntas.add(preguntasRepository.findById("4").get());
+	 * listPreguntas.add(preguntasRepository.findById("5").get());
+	 * listPreguntas.add(preguntasRepository.findById("6").get());
+	 * listPreguntas.add(preguntasRepository.findById("7").get());
+	 * listPreguntas.add(preguntasRepository.findById("8").get());
+	 * listPreguntas.add(preguntasRepository.findById("9").get());
+	 * listPreguntas.add(preguntasRepository.findById("10").get());
 	 * 
-	 * slackService.sendAskTextResponseMessage(message).subscribe(); }; }
+	 * Employee empleado1 = new Employee("1", "Mateo Magliano"); Conversacion
+	 * conversacion = conversacionService.createConversacion(empleado1,
+	 * listPreguntas);
+	 * 
+	 * }; }
 	 */
-	
-	
-	  @Bean public CommandLineRunner testRunner(ConversacionService conversacionService) { 
-		  return args -> {
-	  
-			  Pregunta pregunta1 = new PreguntaTextoLibre("¿Cómo te sientes hoy?");
-			  Pregunta pregunta2 = new PreguntaMultipleChoice("¿Cómo calificarías tu experiencia?", Arrays.asList("Muy mal", "Mal", "Regular", "Bien", "Muy bien"));
-			  
-			  Employee empleado1 = new Employee("1", "Mateo Magliano"); 
-			  Conversacion conversacion = conversacionService.createConversacion(empleado1, Arrays.asList(pregunta1, pregunta2));
-	  
-		  }; 
-	   }
 	 
 }

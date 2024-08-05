@@ -6,8 +6,8 @@ public class PreguntaMultipleChoice extends Pregunta {
 
     private List<String> opciones;
     
-    public PreguntaMultipleChoice(String texto, List<String> opciones) {
-        super(texto);
+    public PreguntaMultipleChoice(String id, String texto, List<String> opciones) {
+        super(id, texto);
         this.opciones = opciones;
     }
     
