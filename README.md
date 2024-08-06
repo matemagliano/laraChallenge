@@ -15,11 +15,14 @@ API para contactar colaboradores vía Slack v0.1 y hacerles un set de preguntas,
 2. En la consola `cd` a esta carpeta
 4. Ejecutar el archivo JAR:
     ```
-    java -jar code/dist/myapp-0.0.1-SNAPSHOT.jar
+    java -jar code/dist/laraChallenge-0.0.1-SNAPSHOT.jar
     ```
 5. La API estará en `http://localhost:8081`.
 
 ### Endpoints
+
+Para acceder a la documentación completa de la API, por favor visita el siguiente enlace:
+[Swagger UI](http://localhost:8081/swagger-ui/index.html#/)
 
 #### Crear Conversación
 
