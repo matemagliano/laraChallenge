@@ -3,7 +3,6 @@ package com.laraChallenge.model;
 public abstract class Pregunta {
 	private String id;
     private String texto;
-    private String tipo;
     
     public Pregunta(String id, String texto) {
     	this.id = id;
@@ -24,11 +23,5 @@ public abstract class Pregunta {
 	}
 	public void setTexto(String texto) {
 		this.texto = texto;
-	}
-	public String getTipo() {
-		return tipo;
-	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 }

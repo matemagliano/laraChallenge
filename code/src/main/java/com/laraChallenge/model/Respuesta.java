@@ -2,7 +2,7 @@ package com.laraChallenge.model;
 
 public class Respuesta {
 
-    private int id;
+    private String id;
     private String texto;
     private int opcion;
     private Pregunta pregunta;
@@ -16,10 +16,10 @@ public class Respuesta {
     }
     
     // Getters and Setters
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getTexto() {
