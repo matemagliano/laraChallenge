@@ -15,7 +15,7 @@ API para contactar colaboradores vía Slack v0.1 y hacerles un set de preguntas,
 2. En la consola `cd` a esta carpeta
 4. Ejecutar el archivo JAR:
     ```
-    java -jar dist/myapp-0.0.1-SNAPSHOT.jar
+    java -jar code/dist/myapp-0.0.1-SNAPSHOT.jar
     ```
 5. La API estará en `http://localhost:8081`.
 
